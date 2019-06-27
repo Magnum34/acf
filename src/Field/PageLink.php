@@ -17,12 +17,15 @@ class PageLink extends PostObject implements FieldInterface
     public function get()
     {
         $page = parent::get();
-        $domain = substr($page->guid, 0, strpos($page->guid, '?'));
+        if($page){
+            $domain = substr($page->guid, 0, strpos($page->guid, '?'));
 
-        if (empty($page->post_name)) {
-            return $page->guid;
+            if (empty($page->post_name)) {
+                return $page->guid;
+            }
+
+            return "{$domain}{$page->post_name}/";
         }
-
-        return "{$domain}{$page->post_name}/";
+        return "";
     }
 }
