@@ -5,8 +5,9 @@
   "license": "MIT",
   "authors": [
     {
-      "name": "Magnum34",
-      "email": "mariusz@magnum34.com"
+        "name": "Junior Grossi",
+	      "email": "juniorgro@gmail.com",
+	      "homepage": "http://jgrossi.com"
     }
   ],
   "require": {
