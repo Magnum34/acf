@@ -1,13 +1,12 @@
 {
-  "name": "corcel/acf",
+  "name": "Magnum34/acf_custom",
   "description": "Advanced Custom Field (ACF) plugin for Corcel",
-  "homepage": "http://github.com/corcel/acf",
+  "homepage": "https://github.com/Magnum34/acf_custom",
   "license": "MIT",
   "authors": [
     {
-      "name": "Junior Grossi",
-      "email": "juniorgro@gmail.com",
-      "homepage": "http://jgrossi.com"
+      "name": "Magnum34",
+      "email": "mariusz@magnum34.com",
     }
   ],
   "require": {
