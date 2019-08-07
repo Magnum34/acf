@@ -67,8 +67,11 @@ class Image extends BasicField implements FieldInterface
             $this->fillFields($attachment);
 
             $imageData = $this->fetchMetadataValue($attachment);
-
-            $this->fillMetadataFields($imageData);
+            if($imageData){
+                $this->fillMetadataFields($imageData);
+            }else{
+                $this->fillMetadataFieldsSVG($attachment);
+            }
         }
     }
 
@@ -133,11 +136,14 @@ class Image extends BasicField implements FieldInterface
      */
     protected function fetchMetadataValue(Post $attachment)
     {
+
         $meta = PostMeta::where('post_id', $attachment->ID)
                         ->where('meta_key', '_wp_attachment_metadata')
                         ->first();
-
-        return unserialize($meta->meta_value);
+        if($meta){
+            return unserialize($meta->meta_value);
+        }
+        return false;
     }
 
     /**
@@ -170,5 +176,22 @@ class Image extends BasicField implements FieldInterface
         $this->width = $imageData['width'];
         $this->height = $imageData['height'];
         $this->sizes = $imageData['sizes'];
+    }
+    /**
+     * @param Post $attachment
+     *
+     * @return array $imageData
+     */
+    public function fillMetadataFieldsSVG(Post $attachment){
+
+        $file = PostMeta::where('post_id', $attachment->ID)
+                        ->where('meta_key', '_wp_attached_file')
+                        ->first();
+        if($file){
+            $this->filename = basename($file);
+            $this->width = false;
+            $this->height = false;
+            $this->sizes = false;
+        }
     }
 }
