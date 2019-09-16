@@ -88,7 +88,17 @@ class Image extends BasicField implements FieldInterface
      */
     protected function fillFields(Post $attachment)
     {
-        //$this->attachment = $attachment;
+        
+
+        $meta = PostMeta::where('post_id', $attachment->ID)
+                        ->where('meta_key', '_wp_attachment_metadata')
+                        ->first();
+        if($meta){
+            $meta =  unserialize($meta->meta_value);
+        }else{
+            $meta = "";
+        }
+        $this->attachment = $meta;
 
         $this->mime_type = $attachment->post_mime_type;
         $this->url = $attachment->guid;
