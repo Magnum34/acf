@@ -158,7 +158,9 @@ class Image extends BasicField implements FieldInterface
                         ->first();
         if($meta){
             $data = unserialize($meta->meta_value);
-            $data['alt'] = $attachment->alt;
+            $alt =  \Corcel\Model\Meta\PostMeta::where(['post_id' => $attachment->ID,'meta_key' => '_wp_attachment_image_alt'])->first();
+            $data['alt'] = $alt->value;
+           
             return $data;
         }
         return false;
