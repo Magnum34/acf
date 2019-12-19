@@ -49,6 +49,9 @@ class Image extends BasicField implements FieldInterface
      */
     protected $sizes = [];
 
+
+    public $alt;
+
     /**
      * @var bool
      */
@@ -67,6 +70,7 @@ class Image extends BasicField implements FieldInterface
             $this->fillFields($attachment);
 
             $imageData = $this->fetchMetadataValue($attachment);
+
             if($imageData){
                 $this->fillMetadataFields($imageData);
             }else{
@@ -88,7 +92,7 @@ class Image extends BasicField implements FieldInterface
      */
     protected function fillFields(Post $attachment)
     {
-        
+
 
         $meta = PostMeta::where('post_id', $attachment->ID)
                         ->where('meta_key', '_wp_attachment_metadata')
@@ -98,11 +102,13 @@ class Image extends BasicField implements FieldInterface
         }else{
             $meta = "";
         }
+        $alt =  \Corcel\Model\Meta\PostMeta::where(['post_id' => $attachment->ID,'meta_key' => '_wp_attachment_image_alt'])->first();
         $this->attachment = $meta;
 
         $this->mime_type = $attachment->post_mime_type;
         $this->url = $attachment->guid;
         $this->description = $attachment->post_excerpt;
+        $this->alt = $alt;
     }
 
     /**
@@ -151,7 +157,9 @@ class Image extends BasicField implements FieldInterface
                         ->where('meta_key', '_wp_attachment_metadata')
                         ->first();
         if($meta){
-            return unserialize($meta->meta_value);
+            $data = unserialize($meta->meta_value);
+            $data['alt'] = $attachment->alt;
+            return $data;
         }
         return false;
     }
@@ -169,7 +177,7 @@ class Image extends BasicField implements FieldInterface
         $metaRows = PostMeta::whereIn("post_id", $ids)
             ->where('meta_key', '_wp_attachment_metadata')
             ->get();
-            
+
         foreach ($metaRows as $meta) {
             $metadataValues[$meta->post_id] = unserialize($meta->meta_value);
         }
@@ -186,6 +194,7 @@ class Image extends BasicField implements FieldInterface
         $this->width = $imageData['width'];
         $this->height = $imageData['height'];
         $this->sizes = $imageData['sizes'];
+        $this->alt = $imageData['alt'];
     }
     /**
      * @param Post $attachment
