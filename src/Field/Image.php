@@ -108,7 +108,11 @@ class Image extends BasicField implements FieldInterface
         $this->mime_type = $attachment->post_mime_type;
         $this->url = $attachment->guid;
         $this->description = $attachment->post_excerpt;
-        $this->alt = $alt;
+        if($alt){
+            $this->alt = $alt->value;
+        }else{
+            $this->alt = null;
+        }
     }
 
     /**
@@ -159,7 +163,12 @@ class Image extends BasicField implements FieldInterface
         if($meta){
             $data = unserialize($meta->meta_value);
             $alt =  \Corcel\Model\Meta\PostMeta::where(['post_id' => $attachment->ID,'meta_key' => '_wp_attachment_image_alt'])->first();
-            $data['alt'] = $alt->value;
+            if($alt){
+                $data['alt'] = $alt->value;
+            }else{
+                 $data['alt'] = null;
+            }
+           
            
             return $data;
         }
